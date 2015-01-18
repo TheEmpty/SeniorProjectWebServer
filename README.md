@@ -12,7 +12,7 @@
 * Install and run mongodb.
 * Make sure your config.json has correct mongodb settings for env. (note that you can pass a location for a server specific config.json via ``./src/app.js 3000 myConfig.json`)
 * `npm install -g forever`
-* `forever -c "node --harmony" src/app.js 3000`
+* `NODE_ENV='production' forever -c "node --harmony" src/app.js 3000`
 
 ## Issues
 * No CSRF tags, allowing for replay attacks
