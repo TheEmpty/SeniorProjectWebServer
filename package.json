@@ -1,0 +1,22 @@
+{
+  "name": "Web-Backend-for-Nowall",
+  "private": true,
+  "version": "0.0.5",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node --harmony src/app.js",
+    "dev": "supervisor --harmony src/app.js"
+  },
+  "dependencies": {
+    "bcrypt": "^0.8.0",
+    "colors": "^1.0.3",
+    "koa": "^0.14.0",
+    "koa-generic-session": "^1.5.0",
+    "koa-hbs": "^0.6.0",
+    "koa-router": "^3.8.0",
+    "koa-session-mongoose": "^0.4.0",
+    "koa-static-cache": "^2.0.1",
+    "mongoose": "^3.8.21",
+    "urlencode": "^0.2.0"
+  }
+}

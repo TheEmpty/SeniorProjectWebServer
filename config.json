@@ -1,0 +1,26 @@
+{
+  "port": 3000,
+  "cookieKey": "nmkroiy_VxqDnfag7mUuIdeLpZv_u30JAUdTr$9DpnN_zappfNkvH$M?r4p8dWN00JK-7Zt3DQmd6-xdlGaDegdqv49yE?bjW?-IB0o?4btz7tXi?0G2SNjnQ6cF?WKK$vF9Z2yJP7zIy2JgcJk-LmuYhjgDhhE1eQm_ysRek8l9jl3pzorThrEd6KlBbCw_4L$-9sgGYHdhy7147TKp0O79NhwB0_vPy9",
+
+  "handlebarsConfig": {
+    "defaultLayout": "main",
+    "viewPath": "src/views/pages",
+    "layoutsPath": "src/views/layouts"
+  },
+
+  "koa-cache": {
+    "cacheSrc": "src/static",
+    "cacheOpt": {
+      "prefix": "/"
+    }
+  },
+
+  "mongoose": {
+    "urls": {
+      "development": "mongodb://localhost/senior-project/test"
+    }
+  },
+
+  "secret": "todo",
+  "signature": "todo: public key for signed device IDs"
+}
