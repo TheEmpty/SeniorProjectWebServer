@@ -87,7 +87,7 @@ module.exports = function(app) {
       }
     } else {
       this.response.type = 'text/html';
-      this.session.flash.danger = "Invalid username/password.";
+      this.session.flash.info = "Invalid username/password.";
       yield this.render('accounts/login', {
         title: "Login",
         email: this.form.email
