@@ -4,6 +4,7 @@
   <div class="col-md-4">
     <h1>Settings</h1>
     <form method="POST" action="{{urlFor "settings"}}">
+      {{ csrf_tag }}
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" name="email" value="{{user.email}}" />

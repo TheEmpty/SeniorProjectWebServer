@@ -17,8 +17,13 @@ module.exports = function(app) {
   });
 
   app.post('/accounts/settings', auth, readBody, function*(next) {
+    if(this.csrfCheck == false) {
+      this.session.flash.danger = "Security token (CSRF) invalid."
+      this.response.redirect('settings');
+      return;
+    }
+
     var user = yield this.getUser();
-    console.log(user);
 
     if(user.checkPassword(this.form.password) == false) {
       this.session.flash.danger = "Wrong password";
@@ -73,7 +78,12 @@ module.exports = function(app) {
   });
 
   app.post('/accounts/login', readBody, function*(next) {
-    var user = yield this.models.User.findByEmail(this.form.email);
+    if(this.csrfCheck == false) {
+      this.session.flash.danger = "Whoa, the security token was incorrect. Try that again?";
+      var user = null;
+    } else {
+      var user = yield this.models.User.findByEmail(this.form.email);
+    }
 
     if(user != null && user.checkPassword(this.form.password)) {
       this.session.flash.success = "Welcome back, " + user.email;
@@ -86,11 +96,10 @@ module.exports = function(app) {
         this.response.redirect(app.url('dashboard'));
       }
     } else {
-      this.response.type = 'text/html';
       this.session.flash.info = "Invalid username/password.";
       yield this.render('accounts/login', {
         title: "Login",
-        email: this.form.email
+        email: this.form ? this.form.email : ''
       });
     }
   })

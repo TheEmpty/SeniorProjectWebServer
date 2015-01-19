@@ -15,7 +15,7 @@
 * `NODE_ENV='production' forever -c "node --harmony" src/app.js 3000`
 
 ## Issues
-* No CSRF tags, allowing for replay attacks
+* Logout should be DELETE
 
 ## Next Steps
 * Create user (admin)

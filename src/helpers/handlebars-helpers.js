@@ -18,6 +18,11 @@ module.exports = function(app, hbs) {
     return new hbs.SafeString(url);
   })
 
+  hbs.registerHelper('csrf_tag', function() {
+    var context = hbs.templateOptions.data.koa;
+    return new hbs.SafeString("<input type='hidden' name='csrf' value='" + context.getCsrf() + "' />")
+  });
+
   hbs.registerHelper('linkTo', function(str, name) {
     var url = hbs.templateOptions.data.koa.koa.url(str);
     var link = "<a href='" + url + "'>" + name + "</a>";

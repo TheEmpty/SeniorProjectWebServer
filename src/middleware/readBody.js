@@ -14,12 +14,16 @@ module.exports = function*(next) {
       });
 
       _this.req.on('end', function() {
-        _this.form = qs.parse(body);
-        resolve(_this.form);
+        form = qs.parse(body);
+        if(_this.verifyCsrf(form.csrf)) {
+          _this.form = form;
+          resolve(true);
+        }
+        resolve(false);
       });
     }
   );
 
-  yield p1;
+  this.csrfCheck = yield p1;
   yield* next;
 }

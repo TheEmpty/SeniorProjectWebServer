@@ -28,7 +28,8 @@ app.use(function*(next) {
   this.koa = app;
   this.session.flash = this.session.flash || {};
   yield* next;
-})
+});
+app.use(require('./middleware/csrf.js'));
 app.use(hbs.middleware(config.handlebarsConfig));
 app.use(router(app));
 
