@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-xs-0 col-md-4">&nbsp;</div>
+
+  <div class="col-md-4">
+    <h1>Create Account</h1>
+    <form method="POST" action="{{urlFor "new_account"}}">
+      {{ csrf_tag }}
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" />
+      </div>
+
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="admin" value='1'> Admin Account
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-default">Create Account</button>
+    </form>
+  </div>
+
+  <div class="clearfix">&nbsp;</div>
+</div>

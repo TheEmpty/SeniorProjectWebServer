@@ -13,12 +13,12 @@
 * Make sure your config.json has correct mongodb settings for env. (note that you can pass a location for a server specific config.json via ``./src/app.js 3000 myConfig.json`)
 * Inside application folder, `npm intall --production`
 * `npm install -g forever`
-* `NODE_ENV='production' forever -c "node --harmony" src/app.js 3000`
+* `NODE_ENV='production' forever start -c "node --harmony" src/app.js 3005`
 
 ## Next Steps
 * Create user (admin)
 * Edit users (admin)
-* CSRF tags
+* Mailer module
 * Reset password
 * Upload data from device
 * Show charts / dashboard

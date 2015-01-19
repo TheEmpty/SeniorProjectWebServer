@@ -1,5 +1,6 @@
 var auth     = require('./../middleware/authentication.js');
 var readBody = require('./../middleware/readBody.js');
+var crypto   = require('crypto');
 
 module.exports = function(app) {
   app.get('dashboard', '/dashboard', auth, function*(next) {
@@ -9,6 +10,54 @@ module.exports = function(app) {
     });
   });
 
+  // Admin creation
+  app.get('new_account', '/accounts/create', auth, function*(next) {
+    var user = yield this.getUser();
+    if(!user.admin) yield* next;
+    else {
+      yield this.render('accounts/create', {
+        title: "Create User"
+      })
+    }
+  });
+
+  app.post('/accounts/create', auth, readBody, function*(next) {
+    var user = yield this.getUser();
+    if(!user.admin) yield* next;
+    else {
+      var genPass = crypto.randomBytes(12).toString('base64').replace(/\//g,'_');
+
+      var newUser = new this.models.User({
+        email: this.form.email,
+        admin: this.form.admin == '1',
+        creator: user.email,
+        password: genPass
+      });
+
+      var _this = this;
+      var p = new Promise(function(resolve, reject) {
+        newUser.save(function(err) {
+          if(err) {
+            console.log(err);
+            _this.session.flash.danger = "Failed to save! " + err;
+            resolve(false);
+          } else {
+            var settingsUrl = _this.request.header.host + app.url('settings');
+            require('../helpers/mailer.js').creationEmail(newUser.email, newUser.creator, genPass, settingsUrl);
+            _this.session.flash.info = "Success! They should be getting an email soon.";
+            resolve(true);
+          }
+        })
+      });
+      var success = yield p;
+
+      yield this.render('accounts/create', {
+        title: "Create User"
+      })
+    }
+  });
+
+// Settings
   app.get('settings', '/accounts/settings', auth, function*(next) {
     yield this.render('accounts/settings', {
       title: "Settings",
@@ -53,12 +102,6 @@ module.exports = function(app) {
     }
   });
 
-  app.get('login', '/accounts/login', function*(next) {
-    yield this.render('accounts/login', {
-      title: "Login"
-    });
-  });
-
   app.get('forgotPassword', '/accounts/forgot', function*(next) {
     yield this.render('accounts/forgot', {
       title: "Reset password"
@@ -67,6 +110,7 @@ module.exports = function(app) {
 
   app.post('/accounts/forgot', readBody, function*(next) {
     var user = yield this.models.User.findByEmail(this.form.email);
+    yield* next; // temp
     // send an email and set resetCode
     // generate random resetCode
   });
@@ -75,6 +119,13 @@ module.exports = function(app) {
     delete this.session.user_id;
     this.session.flash.info = "You have been logged out."
     this.response.redirect(app.url('login'));
+  });
+
+// Login
+  app.get('login', '/accounts/login', function*(next) {
+    yield this.render('accounts/login', {
+      title: "Login"
+    });
   });
 
   app.post('/accounts/login', readBody, function*(next) {

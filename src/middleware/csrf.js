@@ -1,6 +1,5 @@
 var crypto = require('crypto');
 
-
 module.exports = function*(next) {
   this.getCsrf = function() {
     if(typeof(this.session.csrf) === "undefined") {

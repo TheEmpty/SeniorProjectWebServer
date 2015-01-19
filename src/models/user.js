@@ -5,6 +5,7 @@ module.exports = function(mongoose) {
   var schema = new mongoose.Schema({
     version:   { type: Number, default: 1},
     email:     { type: String, required: true, index: { unique: true } },
+    creator:   { type: String },
     password:  { type: String, required: true },
     resetCode: { type: String },
     resetTime: { type: Date },

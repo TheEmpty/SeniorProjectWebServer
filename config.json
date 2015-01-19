@@ -17,7 +17,8 @@
 
   "mongoose": {
     "urls": {
-      "development": "mongodb://localhost/senior-project/test"
+      "development": "mongodb://mongodb/senior-project/test",
+      "production":  "mongodb://mongodb/senior-project/production"
     }
   },
 
