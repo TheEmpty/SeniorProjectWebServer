@@ -11,11 +11,9 @@
 ## Install (server)
 * Install and run mongodb.
 * Make sure your config.json has correct mongodb settings for env. (note that you can pass a location for a server specific config.json via ``./src/app.js 3000 myConfig.json`)
+* Inside application folder, `npm intall --production`
 * `npm install -g forever`
 * `NODE_ENV='production' forever -c "node --harmony" src/app.js 3000`
-
-## Issues
-* Logout should be DELETE
 
 ## Next Steps
 * Create user (admin)
