@@ -1,24 +1,19 @@
 #Nowall Web Service
 
-## Install (dev)
-* Install [node.js](http://nodejs.org)
-* Install [mongodb](http://mongodb.org)
-* Then `npm install -g nodemon`
-* Inside project directory, `npm install`
-* In order to run the application, mongodb must be up and running (can be configured in `config.json`).
-* `nodemon` to start the server on port 3000 and have it restart on file changes.
+## Install
 
-## Install (server)
-* Install and run mongodb.
-* Make sure your config.json has correct mongodb settings for env. (note that you can pass a location for a server specific config.json via ``./src/app.js 3000 myConfig.json`)
-* Inside application folder, `npm intall --production`
-* `npm install -g forever`
-* `NODE_ENV='production' forever start -c "node --harmony" src/app.js 3005`
+### Docker Install
+* Install [Docker](http://docker.com)
+* Setup a mongodb image, `docker run -d --name="mongodb" -p 27017:27017 dockerfile/mongodb`
+* Inside project folder, build docker image, `docker build -t 'theempty/seniorproject'`
 
-## Next Steps
-* Create user (admin)
-* Edit users (admin)
-* Mailer module
-* Reset password
-* Upload data from device
-* Show charts / dashboard
+### Docker Run
+* Start mongodb, if it's not already running, `docker start mongodb`
+* Start the project,
+  ```bash
+  docker run -it --rm \
+  -p 3000:3000 \
+  -v `pwd`:/src \
+  --link mongodb:mongodb \
+  theempty/seniorproject
+  ```
