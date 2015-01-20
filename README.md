@@ -10,13 +10,14 @@
 ### Docker Run
 * Start mongodb, if it's not already running, `docker start mongodb`
 * Start the project,
-  ```bash
-  docker run -it --rm \
-  -p 3000:3000 \
-  -v `pwd`:/src \
-  --link mongodb:mongodb \
-  theempty/seniorproject
-  ```
+
+```bash
+docker run -it --rm \
+-p 3000:3000 \
+-v `pwd`:/src \
+--link mongodb:mongodb \
+theempty/seniorproject
+```
 
 
 ## Purposed Device Integration
