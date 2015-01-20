@@ -9,11 +9,12 @@
 
 ### Docker Run
 * Start mongodb, if it's not already running, `docker start mongodb`
-* Start the project,
+* Start the project, for production, remove ``-v `pwd`:/src``
 
 ```bash
 docker run -it --rm \
 -p 3000:3000 \
+-v `pwd`:/src \
 --link mongodb:mongodb \
 theempty/seniorproject
 ```
@@ -32,4 +33,3 @@ theempty/seniorproject
 * Device puts in query URL the time and udid.
 * Device signs this (somehow, perhaps signature created by factory during udid), preventing replay attacks and malicious activity.
 * Device sends request.
-
