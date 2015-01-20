@@ -35,7 +35,5 @@ WORKDIR /src
 # eg, export NODE_ENV=production
 ENV NODE_ENV production
 
-# FUTURE: USER, don't run as root
-
-# CMD ["/bin/bash"]
+# Our startup script
 CMD ["/src/run.sh"]
