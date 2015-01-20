@@ -1,5 +1,0 @@
-Device sends request with such as
-/api/v1/heartrate/dump.json?udid=XYZ&time=123&signature=DEF
-udid         = unique device ID
-time         = time since UTC epoch in seconds (replay attacks)
-signature    = before adding signature, signed by key added during setup
