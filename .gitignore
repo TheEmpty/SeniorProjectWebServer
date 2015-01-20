@@ -7,3 +7,6 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
+
+# Starts dev env. Not yet an independent solution
+run.sh

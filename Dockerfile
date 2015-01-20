@@ -30,4 +30,4 @@ RUN \
 ADD . /src
 
 # Our startup script
-CMD ["/src/run.sh"]
+CMD ["/bin/bash", "-c", "cd /src && node --harmony src/app.js"]
