@@ -14,6 +14,7 @@ var koacache = require('koa-static-cache');
 var mongo    = require('./middleware/mongoose.js')(app, config.mongoose);
 var session  = require('koa-generic-session');
 var mCookie  = require('koa-session-mongoose');
+var mailer   = require('./helpers/mailer.js')(app, config.mailer);
 require('./helpers/handlebars-helpers.js')(app, hbs);
 
 // Middleware
@@ -26,6 +27,7 @@ app.use(mongo.middleware);
 app.use(session({ store: mCookie.create() }));
 app.use(function*(next) {
   this.koa = app;
+  this.mailer = mailer;
   this.session.flash = this.session.flash || {};
   yield* next;
 });

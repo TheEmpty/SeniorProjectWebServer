@@ -1,32 +1,62 @@
-var exports = module.exports = {};
-
 var handlebars = require('handlebars');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport();
-// TODO: read views directory from settings.
-// TODO: `from` settings
-// TODO: transporter settings
-// TODO: make URL from app.url(...)
+var templateCache = {};
 
-exports.creationEmail = function(newEmail, creator, password, settingsUrl) {
-  fs.readFile(__dirname + '/../views/mail/accounts/create.hbs', function(err, source) {
+// TODO: record of emails (succesfully) sent (for anything that happens to brake)
+
+module.exports = function(app, config) {
+  return new Mailer(app, config);
+}
+
+function Mailer(app, config) {
+  this.app = app;
+  this.config = config;
+  this.transporter = nodemailer.createTransport(config.transport);
+}
+
+Mailer.prototype.getView = function(file, callback) {
+  if(templateCache[file]) {
+    callback(templateCache[file]);
+    return;
+  }
+
+  var path = __dirname + '/../../' + this.config.mailViews + '/' + file + '.hbs';
+  fs.readFile(path, function(err, stream) {
     if(err) {
       console.log(err);
-      return;
+    } else {
+      var compiled = handlebars.compile(stream.toString());
+      templateCache[file] = compiled;
+      callback(templateCache[file]);
     }
-    var data   = {new_user: newEmail, creator: creator, password: password, settings_url: settingsUrl};
-    var temp   = handlebars.compile(source.toString());
-    var result = temp(data);
+  });
+}
 
-    transporter.sendMail({
-      from: 'noreply@nowall.el-abid.com',
-      to: newEmail,
-      subject: 'Your Nowall Account',
-      html: result,
+Mailer.prototype.url = function(name) {
+  return "http://" + this.config.domain + this.app.url(name);
+}
+
+Mailer.prototype.creationEmail = function(user, creator, password) {
+  var _this = this;
+
+  this.getView('accounts/create', function(template) {
+    var message = template({
+      new_user: user.email,
+      creator: creator.email,
+      password: password,
+      settings_url: _this.url('settings')
+    });
+
+    _this.transporter.sendMail({
+      from: _this.config.from,
+      to: user.email,
+      subject: 'Your New Nowall Account',
+      html: message,
       generateTextFromHTML: true
     }, function(error, info) {
       if(error) console.log(error);
+      if(info)  console.log(info);
     })
-  });
+  })
 }

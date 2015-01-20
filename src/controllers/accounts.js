@@ -43,7 +43,7 @@ module.exports = function(app) {
             resolve(false);
           } else {
             var settingsUrl = _this.request.header.host + app.url('settings');
-            require('../helpers/mailer.js').creationEmail(newUser.email, newUser.creator, genPass, settingsUrl);
+            _this.mailer.creationEmail(newUser, user, genPass);
             _this.session.flash.info = "Success! They should be getting an email soon.";
             resolve(true);
           }

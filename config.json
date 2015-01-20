@@ -8,6 +8,13 @@
     "layoutsPath": "src/views/layouts"
   },
 
+  "mailer": {
+    "mailViews": "src/views/mail",
+    "from": "Nowall Automated Services <noreply@nowall.el-abid.com>",
+    "domain": "nowall.el-abid.com",
+    "transport": {}
+  },
+
   "koa-cache": {
     "cacheSrc": "src/static",
     "cacheOpt": {
