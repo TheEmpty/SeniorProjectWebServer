@@ -9,12 +9,22 @@
 
 ### Docker Run
 * Start mongodb, if it's not already running, `docker start mongodb`
-* Start the project, for production, remove ``-v `pwd`:/src``
+* Start the project,
 
+Development example:
 ```bash
 docker run -it --rm \
 -p 3000:3000 \
 -v `pwd`:/src \
+-e "NODE_ENV=development" \
+--link mongodb:mongodb \
+theempty/seniorproject
+```
+
+Production example:
+```bash
+docker run -it --rm \
+-p 3000:3000 \
 --link mongodb:mongodb \
 theempty/seniorproject
 ```
