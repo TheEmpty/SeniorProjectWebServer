@@ -31,7 +31,7 @@ module.exports = function(mongoose) {
     return bcrypt.compareSync(attempt, this.password);
   }
 
-  var hoursForReset = schema.statics.hoursForReset = 0;
+  var hoursForReset = schema.statics.hoursForReset = (process.env.NODE_ENV == 'development') ? 0 : 24;
 
   schema.methods.generateReset = function() {
     if(typeof(this.resetTime) == 'undefined' || new Date() - this.resetTime >= 1000 * 60 * 60 * hoursForReset) {
