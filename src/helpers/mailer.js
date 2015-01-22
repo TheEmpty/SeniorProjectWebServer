@@ -37,6 +37,11 @@ Mailer.prototype.url = function(name) {
   return "http://" + this.config.domain + this.app.url(name);
 }
 
+Mailer.prototype.completionHandler = function(err, info) {
+  if(err)  console.log(err);
+  if(info) console.log(info);
+}
+
 Mailer.prototype.creationEmail = function(user, creator, password) {
   var _this = this;
 
@@ -48,15 +53,37 @@ Mailer.prototype.creationEmail = function(user, creator, password) {
       settings_url: _this.url('settings')
     });
 
+    if(_this.app.env == "development") console.log(message);
+
     _this.transporter.sendMail({
       from: _this.config.from,
       to: user.email,
       subject: 'Your New Nowall Account',
       html: message,
       generateTextFromHTML: true
-    }, function(error, info) {
-      if(error) console.log(error);
-      if(info)  console.log(info);
-    })
+    }, _this.completionHandler);
+  });
+};
+
+Mailer.prototype.recoverEmail = function(user, ip, hours) {
+  var _this = this;
+
+  this.getView('accounts/recover', function(template) {
+    var message = template({
+      email: user.email,
+      ip: ip,
+      url: _this.url('resetPassword'),
+      hours: hours
+    });
+
+    if(_this.app.env == "development") console.log(message);
+
+    _this.transporter.sendMail({
+      from: _this.config.from,
+      to: user.email,
+      subject: 'Reset Nowall Password',
+      html: message,
+      generateTextFromHTML: true
+    }, _this.completionHandler)
   })
 }

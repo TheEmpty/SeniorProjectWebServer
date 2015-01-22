@@ -1,9 +1,9 @@
-var crypto = require('crypto');
+var randStr = require('../helpers/randString.js');
 
 module.exports = function*(next) {
   this.getCsrf = function() {
     if(typeof(this.session.csrf) === "undefined") {
-      this.session.csrf = crypto.randomBytes(32).toString('base64').replace(/\//g,'_');
+      this.session.csrf = randStr(32);
     }
 
     return this.session.csrf;

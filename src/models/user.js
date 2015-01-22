@@ -1,4 +1,5 @@
-var bcrypt = require('bcrypt');
+var bcrypt     = require('bcrypt');
+var randStr    = require('../helpers/randString.js');
 var saltFactor = 10;
 
 module.exports = function(mongoose) {
@@ -30,7 +31,17 @@ module.exports = function(mongoose) {
     return bcrypt.compareSync(attempt, this.password);
   }
 
-  // findByEmail
+  var hoursForReset = schema.statics.hoursForReset = 0;
+
+  schema.methods.generateReset = function() {
+    if(typeof(this.resetTime) == 'undefined' || new Date() - this.resetTime >= 1000 * 60 * 60 * hoursForReset) {
+      this.resetCode = randStr(32);
+      this.resetTime = new Date();
+      return true;
+    }
+    return false;
+  }
+
   schema.statics.findByEmail = function(email) {
     return new Promise(function(resolve, reject) {
       mongoose.models.User.findOne({email: email.toLowerCase()}, function(err, user) {

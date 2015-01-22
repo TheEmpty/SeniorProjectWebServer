@@ -1,6 +1,6 @@
-var auth     = require('./../middleware/authentication.js');
-var readBody = require('./../middleware/readBody.js');
-var crypto   = require('crypto');
+var auth     = require('../middleware/authentication.js');
+var readBody = require('../middleware/readBody.js');
+var randStr  = require('../helpers/randString.js');
 
 module.exports = function(app) {
   app.get('dashboard', '/dashboard', auth, function*(next) {
@@ -25,7 +25,7 @@ module.exports = function(app) {
     var user = yield this.getUser();
     if(!user.admin) yield* next;
     else {
-      var genPass = crypto.randomBytes(12).toString('base64').replace(/\//g,'_');
+      var genPass = randStr(12);
 
       var newUser = new this.models.User({
         email: this.form.email,
@@ -109,10 +109,37 @@ module.exports = function(app) {
   });
 
   app.post('/accounts/forgot', readBody, function*(next) {
-    var user = yield this.models.User.findByEmail(this.form.email);
-    yield* next; // temp
-    // send an email and set resetCode
-    // generate random resetCode
+    var _this = this;
+    var user  = yield this.models.User.findByEmail(this.form.email);
+
+    if(user && user.generateReset()) {
+      var prom = new Promise(function(resolve, reject) {
+        user.save(function(err) {
+          if(err) {
+            console.log(err);
+            _this.session.flash.danger = "Database error";
+          } else {
+            _this.mailer.recoverEmail(user, _this.request.ip, _this.models.User.hoursForReset);
+            _this.session.flash.info = "Email being sent!";
+          }
+          resolve();
+        });
+      });
+      yield prom;
+
+    } else {
+      this.session.flash.info = "Couldn't find account, or you've requested a reset in the past " + this.models.User.hoursForReset + " hours.";
+    }
+
+    yield this.render('accounts/forgot', {
+      title: "Reset Password"
+    });
+  });
+
+  app.get('resetPassword', '/accounts/reset', function*(next) {
+    yield this.render('accounts/reset', {
+      title: "Reset Password"
+    });
   });
 
   app.get('logout', '/accounts/logout', function*(next) {
