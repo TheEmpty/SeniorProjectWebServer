@@ -1,6 +1,7 @@
-var auth     = require('../middleware/authentication.js');
-var readBody = require('../middleware/readBody.js');
-var randStr  = require('../helpers/randString.js');
+var auth      = require('../middleware/authentication.js');
+var readBody  = require('../middleware/readBody.js');
+var readParam = require('../middleware/readParams.js');
+var randStr   = require('../helpers/randString.js');
 
 module.exports = function(app) {
   app.get('dashboard', '/dashboard', auth, function*(next) {
@@ -136,7 +137,30 @@ module.exports = function(app) {
     });
   });
 
-  app.get('resetPassword', '/accounts/reset', function*(next) {
+  function getResetUser() {
+    if(this.params.email && this.params.code) {
+      var _this = this;
+      user = yield (new Promise(function(resolve, reject) {
+        _this.models.User.findOne({
+          email: _this.params.email.toLowerCase(),
+          resetCode: _this.params.code
+        }, function(err, result) {
+          resolve(result);
+        })
+      }));
+    };
+
+    return user;
+  }
+
+  app.get('resetPassword', '/accounts/reset', readParam, function*(next) {
+    var user = null;
+    getResetUser(this);
+
+    if(user == null) {
+      this.session.flash.danger = "Unable to find matching account, your token has probably expired."
+    }
+
     yield this.render('accounts/reset', {
       title: "Reset Password"
     });

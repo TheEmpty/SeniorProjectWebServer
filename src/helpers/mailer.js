@@ -72,7 +72,7 @@ Mailer.prototype.recoverEmail = function(user, ip, hours) {
     var message = template({
       email: user.email,
       ip: ip,
-      url: _this.url('resetPassword'),
+      url: _this.url('resetPassword') + '?email=' + user.email + '&code=' + user.resetCode,
       hours: hours
     });
 
