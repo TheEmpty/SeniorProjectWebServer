@@ -29,5 +29,7 @@ RUN \
 # Add source 
 ADD . /src
 
+EXPOSE 3000
+
 # Our startup script
 CMD ["/bin/bash", "-c", "cd /src && node --harmony src/app.js"]
