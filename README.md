@@ -5,7 +5,7 @@
 ### Docker Install
 * Install [Docker](http://docker.com)
 * Pull down mongodb, `docker pull dockerfile/mongodb`
-* Build the project's docker file, `docker build -t nowall .
+* Build the project's docker file, `docker build -t nowall`.
 * Confirm that mongodb works for you and reserve it's name, run
 `sudo docker run --name="mongodb" -p 27017:27017 dockerfile/mongodb mongod --smallfiles`
 and press control+c after seeing, "waiting for connections".
