@@ -4,6 +4,7 @@ var conFile= process.argv[3] || __dirname + "/../config.json";
 var config = require(conFile);
 var port   = process.argv[2] || config.port;
 app.keys   = [config.cookieKey];
+console.info("Running in: " + app.env)
 
 // Modules
 require('colors');
@@ -56,6 +57,21 @@ for(i = 0; i < controllers.length; i++) {
   console.log(('Loading ' + controllers[i] + ' controller').yellow.bold);
   require('./controllers/' + controllers[i])(app);
 }
+
+// Create default user
+mongo.mongoose.models.User.count({}, function(err, count) {
+  if(err == null && count == 0) {
+    new mongo.mongoose.models.User({
+      email: "mohammad.elabid@gmail.com",
+      password: "password",
+      admin: true
+    }).save(function(err) {
+      if(err == null) {
+        console.info("Created default account".blue.bold)
+      }
+    })
+  }
+});
 
 // Ready
 console.info('Listening on port '.green + new String(port).magenta.bold);

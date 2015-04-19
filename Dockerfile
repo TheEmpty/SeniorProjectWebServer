@@ -11,9 +11,9 @@ RUN \
 # Install Node 0.11.14, has support for ES6
 RUN  \
   cd /opt && \
-  wget http://nodejs.org/dist/v0.11.14/node-v0.11.14-linux-x64.tar.gz && \
-  tar -xzf node-v0.11.14-linux-x64.tar.gz && \
-  mv node-v0.11.14-linux-x64 node && \
+  wget http://nodejs.org/dist/v0.12.0/node-v0.12.0-linux-x64.tar.gz && \
+  tar -xzf node-v0.12.0-linux-x64.tar.gz && \
+  mv node-v0.12.0-linux-x64 node && \
   cd /usr/local/bin && \
   ln -s /opt/node/bin/* .
 
@@ -26,10 +26,11 @@ RUN \
   cd /src && \
   npm install --production
 
-# Add source 
+# Add source
 ADD . /src
 
 EXPOSE 3000
 
 # Our startup script
 CMD ["/bin/bash", "-c", "cd /src && node --harmony src/app.js"]
+# CMD ["/bin/bash"]
