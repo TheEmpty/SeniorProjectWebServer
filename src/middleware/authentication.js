@@ -12,6 +12,11 @@ module.exports = function*(next) {
         var _this = this;
         var prom = new Promise(function(resolve, reject) {
           _this.models.User.findOne({_id: _this.session.user_id}, function(err, user) {
+            if(user == null && err == null) {
+              delete _this.session.user_id;
+              _this.session.flash.info = "Whoa, you went missing!";
+              _this.response.redirect('/accounts/login');
+            }
             resolve(user);
           });
         });
