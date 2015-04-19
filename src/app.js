@@ -61,15 +61,30 @@ for(i = 0; i < controllers.length; i++) {
 // Create default user
 mongo.mongoose.models.User.count({}, function(err, count) {
   if(err == null && count == 0) {
-    new mongo.mongoose.models.User({
+    var User = mongo.mongoose.models.User
+    var callback = function(err) {
+      if(err == null) {
+        console.info("Created a default account.".blue.bold)
+      }
+    }
+
+    new User({
       email: "mohammad.elabid@gmail.com",
       password: "password",
       admin: true
-    }).save(function(err) {
-      if(err == null) {
-        console.info("Created default account".blue.bold)
-      }
-    })
+    }).save(callback)
+
+    new User({
+      email: "arushiv@my.bridgeport.edu",
+      password: "arushi",
+      admin: true
+    }).save(callback)
+
+    new User({
+      email: "lvilaboi@my.bridgeport.edu",
+      password: "olive",
+      admin: true
+    }).save(callback)
   }
 });
 
