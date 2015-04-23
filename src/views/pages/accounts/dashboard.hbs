@@ -3,11 +3,25 @@
     <h2>Your Dog</h2>
   </div>
   <div class="col-md-6">
-    <h3>Temperature <small>from April 15<sup>th</sup> to May 15<sup>th</sup></small></h3>
+    <h3>
+      Temperature
+      <small>
+        from <input type="date" id="temp-from" value="2015-04-15" style="width: 70px; text-align: center; font-size: 13px; line-height: 13px;">
+        to   <input type="date" id="temp-to"   value="2015-05-15" style="width: 70px; text-align: center; font-size: 13px; line-height: 13px;">
+        <input class="btn btn-xs btn-info" type="submit" id="load-temp" value="reload">
+      </small>
+    </h3>
     <div id="temp-chart" style="width:100%; height:250px">&nbsp;</div>
   </div>
   <div class="col-md-6">
-    <h3>Heart Rate <small>from April 15<sup>th</sup> to May 15<sup>th</sup></small></h3>
+    <h3>
+      Heart Rate
+      <small>
+        from <input type="date" id="heart-rate-from" value="2015-04-15" style="width: 70px; text-align: center; font-size: 13px; line-height: 13px;">
+        to   <input type="date" id="heart-rate-to"   value="2015-05-15" style="width: 70px; text-align: center; font-size: 13px; line-height: 13px;">
+        <input class="btn btn-xs btn-info" type="submit" id="load-heart-rate" value="reload">
+      </small>
+    </h3>
     <div id="heart-chart" style="width:100%; height:250px">&nbsp;</div>
   </div>
 </div>
@@ -56,18 +70,45 @@
       }]
     });
 
-    getDatapoints("heartrate", new Date(2015, 03, 15), new Date(2015, 04, 15), function(data) {
-      $.each(data, function(index, item) {
-        heartPoints.push({x: new Date(item.time), y: item.value})
+    $("#load-heart-rate").click(function() {
+      var start = new Date($("#heart-rate-from").val())
+      var end = new Date($("#heart-rate-to").val())
+      end.setHours(23)
+      end.setMinutes(59)
+      end.setSeconds(59)
+
+      getDatapoints("heartrate", start, end, function(data) {
+        heartPoints.length = 0;
+        $.each(data, function(index, item) {
+          heartPoints.push({x: new Date(item.time), y: item.value})
+        });
+        heartChart.render();
       });
-      heartChart.render();
     });
 
-    getDatapoints("temperature", new Date(2015, 03, 15), new Date(2015, 04, 15), function(data) {
-      $.each(data, function(index, item) {
-        tempPoints.push({x: new Date(item.time), y: item.value})
-      });
-      tempChart.render();
+    $("#load-temp").click(function() {
+      var start = new Date($("#temp-from").val())
+      var end = new Date($("#temp-to").val())
+      end.setHours(23)
+      end.setMinutes(59)
+      end.setSeconds(59)
+
+      getDatapoints("temperature", start, end, function(data) {
+        tempPoints.length = 0;
+        $.each(data, function(index, item) {
+          tempPoints.push({x: new Date(item.time), y: item.value})
+        });
+        tempChart.render();
+      })
     });
+
+    var today = new Date();
+    var weekAgo = new Date(today - 1000*60*60*24*7)
+    $("#heart-rate-to").val(today.toISOString().slice(0,10))
+    $("#temp-to").val(today.toISOString().slice(0,10))
+    $("#heart-rate-from").val(weekAgo.toISOString().slice(0,10))
+    $("#temp-from").val(weekAgo.toISOString().slice(0,10))
+    $("#load-heart-rate").click()
+    $("#load-temp").click()
   </script>
 {{/contentFor}}

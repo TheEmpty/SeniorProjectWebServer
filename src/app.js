@@ -33,6 +33,7 @@ app.use(function*(next) {
   yield* next;
 });
 app.use(require('./middleware/csrf.js'));
+config.handlebarsConfig['disableCache'] = config.handlebarsConfig['disableCache'] || app.env == "development"
 app.use(hbs.middleware(config.handlebarsConfig));
 app.use(router(app));
 
