@@ -3,11 +3,11 @@
     <h2>Your Dog</h2>
   </div>
   <div class="col-md-6">
-    <h3>Temperature</h3>
+    <h3>Temperature <small>from April 15<sup>th</sup> to May 15<sup>th</sup></small></h3>
     <div id="temp-chart" style="width:100%; height:250px">&nbsp;</div>
   </div>
   <div class="col-md-6">
-    <h3>Heart Rate</h3>
+    <h3>Heart Rate <small>from April 15<sup>th</sup> to May 15<sup>th</sup></small></h3>
     <div id="heart-chart" style="width:100%; height:250px">&nbsp;</div>
   </div>
 </div>
@@ -26,36 +26,48 @@
 {{/ifAdmin}}
 
 {{#contentFor "javascript"}}
-<script src="/js/jquery.canvasjs.min.js"></script>
-<script>
-var dataLength = 500;
-var tempPoints = [];
-var heartPoints = [];
+  <script src="/js/jquery.canvasjs.min.js"></script>
 
-var tempChart = new CanvasJS.Chart("temp-chart",{
-  data: [{
-    type: "line",
-    color: "blue",
-    dataPoints: tempPoints
-  }]
-});
+  <script>
+    var tempPoints = [];
+    var heartPoints = [];
+    var dataLength = 500;
 
-var heartChart = new CanvasJS.Chart("heart-chart",{
-  data: [{
-    type: "line",
-    color: "red",
-    dataPoints: heartPoints
-  }]
-});
+    var getDatapoints = function(sensor, start, end, callback) {
+      start = start.getTime() / 1000;
+      end = end.getTime() / 1000;
+      var url = "/api/v1/sensors/get?sensor=" + sensor + "&start=" + start + "&end=" + end;
+      $.ajax(url).done(callback);
+    }
 
-// Setup inital points
-for(var i = 0; i < 100; i++) {
-  tempPoints[i] = {x: new Date(2012, i, 1), y: Math.floor(Math.random()*10) + 30}
-  heartPoints[i] = {x: new Date(2012, i, 1), y: Math.floor(Math.random()*20) + 50}
-}
+    var tempChart = new CanvasJS.Chart("temp-chart",{
+      data: [{
+        type: "line",
+        color: "blue",
+        dataPoints: tempPoints
+      }]
+    });
 
-tempChart.render();
-heartChart.render();
+    var heartChart = new CanvasJS.Chart("heart-chart",{
+      data: [{
+        type: "line",
+        color: "red",
+        dataPoints: heartPoints
+      }]
+    });
 
-</script>
+    getDatapoints("heartrate", new Date(2015, 03, 15), new Date(2015, 04, 15), function(data) {
+      $.each(data, function(index, item) {
+        heartPoints.push({x: new Date(item.time), y: item.value})
+      });
+      heartChart.render();
+    });
+
+    getDatapoints("temperature", new Date(2015, 03, 15), new Date(2015, 04, 15), function(data) {
+      $.each(data, function(index, item) {
+        tempPoints.push({x: new Date(item.time), y: item.value})
+      });
+      tempChart.render();
+    });
+  </script>
 {{/contentFor}}
