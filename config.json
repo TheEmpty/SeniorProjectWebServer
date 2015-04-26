@@ -25,7 +25,7 @@
   "mongoose": {
     "urls": {
       "development": "mongodb://localhost/senior-project/test",
-      "production":  "mongodb://nowall:clU5ZEZxd0tXT1ErSVl5djhQUjFaZlBqSWwwNE42QnJtQW9sT3h3MWQwTT0K@172.17.0.5:27017/nowall-production"
+      "production":  "mongodb://nowall:azZ4N2pUem9lRExyekhtOHBPbnZjRjNkN2xka1VBTEVScGtiaW5OckJCST0K@172.17.0.17:27017/nowall-production"
     }
   },
 
