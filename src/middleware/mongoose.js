@@ -1,6 +1,7 @@
 module.exports = function(app, options) {
   var mongoose = require('mongoose');
-  mongoose.connect(process.env.MONGO_URI || options.urls[app.env]);
+  var uri = process.env.MONGO_URI || options.urls[app.env];
+  mongoose.connect(uri.toString());
 
   return {
     mongoose: mongoose,
