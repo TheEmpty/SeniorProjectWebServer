@@ -1,7 +1,12 @@
 module.exports = function(app, options) {
   var mongoose = require('mongoose');
-  var uri = options.urls[app.env]; // process.env.MONGO_URI || options.urls[app.env];
-  mongoose.connect(uri.toString());
+  var uri = options.urls[app.env];
+
+  if(process.env.MONGO_URI) {
+    uri = process.env.MONGO_URI.replace(/"/g,'')
+  }
+
+  mongoose.connect(uri);
 
   return {
     mongoose: mongoose,
