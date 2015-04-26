@@ -3,7 +3,8 @@ module.exports = function(app, options) {
   var uri = options.urls[app.env];
 
   if(process.env.MONGO_URI) {
-    uri = process.env.MONGO_URI.replace(/"/g,'')
+    uri = process.env.MONGO_URI.replace(/"/g,'');
+    console.info("Using ENV for MongoDB: " + uri)
   }
 
   mongoose.connect(uri);
