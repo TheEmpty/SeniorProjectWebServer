@@ -10,3 +10,6 @@ npm-debug.log
 
 # Starts dev env. Not yet an independent solution
 run.sh
+
+# vim!
+.swp
