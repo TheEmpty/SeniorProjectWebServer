@@ -102,8 +102,8 @@
       })
     });
 
-    var today = new Date(new Date() + 1000*60*60*24);
-    var weekAgo = new Date(today - 1000*60*60*24*7)
+    var today = new Date(new Date().getTime() + 1000*60*60*24);
+    var weekAgo = new Date(today - 1000*60*60*24*7);
     $("#heart-rate-to").val(today.toISOString().slice(0,10))
     $("#temp-to").val(today.toISOString().slice(0,10))
     $("#heart-rate-from").val(weekAgo.toISOString().slice(0,10))
