@@ -1,3 +1,5 @@
+require('colors');
+
 // Configuration
 var app    = require('koa')();
 var conFile= process.argv[3] || __dirname + "/../config.json";
@@ -7,7 +9,6 @@ app.keys   = [config.cookieKey];
 console.info("Running in: ".green.bold + app.env.blue.bold)
 
 // Modules
-require('colors');
 var fs       = require('fs');
 var hbs      = require('koa-hbs');
 var router   = require('koa-router');

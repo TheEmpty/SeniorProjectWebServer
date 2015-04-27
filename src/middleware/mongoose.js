@@ -1,3 +1,5 @@
+require('colors');
+
 module.exports = function(app, options) {
   var mongoose = require('mongoose');
   var uri = options.urls[app.env];
