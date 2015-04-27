@@ -8,6 +8,18 @@ var port   = process.argv[2] || config.port;
 app.keys   = [config.cookieKey];
 console.info("Running in: ".green.bold + app.env.blue.bold)
 
+// Nasty little hack so we use SendGrid in prod
+if(process.env.SENDGRID_USERNAME && process.env.SENDGRID_PASSWORD) {
+  console.info("Overriding config.mailer.transport because of Sendgrid Env vars".red.bold)
+
+  config.mailer.transport = require('nodemailer-sendgrid-transport')({
+    auth: {
+      api_user: process.env.SENDGRID_USERNAME,
+      api_key: process.env.SENDGRID_PASSWORD
+    }
+  })
+}
+
 // Modules
 var fs       = require('fs');
 var hbs      = require('koa-hbs');
