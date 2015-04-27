@@ -43,9 +43,13 @@
   <script src="/js/jquery.canvasjs.min.js"></script>
 
   <script>
+  // TODO: lot of copy/paste between the two charts, combine functions?
     var tempPoints = [];
     var heartPoints = [];
     var dataLength = 500;
+    var dataReloadIntervals = 5 * 1000;
+    var heartRateRange = {};
+    var tempRange = {};
 
     var getDatapoints = function(sensor, start, end, callback) {
       start = start.getTime() / 1000;
@@ -70,44 +74,67 @@
       }]
     });
 
-    $("#load-heart-rate").click(function() {
-      var start = new Date($("#heart-rate-from").val())
-      var end = new Date($("#heart-rate-to").val())
-      end.setHours(23)
-      end.setMinutes(59)
-      end.setSeconds(59)
+    var loadHeartRateRunner;
+    var loadTempRunner;
 
-      getDatapoints("heartrate", start, end, function(data) {
+    var loadHeartRateData = function() {
+      getDatapoints("heartrate", heartRateRange.start, heartRateRange.end, function(data) {
         heartPoints.length = 0;
         $.each(data, function(index, item) {
           heartPoints.push({x: new Date(item.time), y: item.value})
         });
         heartChart.render();
       });
-    });
+    };
 
-    $("#load-temp").click(function() {
-      var start = new Date($("#temp-from").val())
-      var end = new Date($("#temp-to").val())
-      end.setHours(23)
-      end.setMinutes(59)
-      end.setSeconds(59)
-
-      getDatapoints("temperature", start, end, function(data) {
+    var loadTempData = function() {
+      getDatapoints("temperature", tempRange.start, tempRange.end, function(data) {
         tempPoints.length = 0;
         $.each(data, function(index, item) {
           tempPoints.push({x: new Date(item.time), y: item.value})
         });
         tempChart.render();
-      })
+      });
+    };
+
+    $("#load-heart-rate").click(function() {
+      clearInterval(loadHeartRateData);
+
+      var start = new Date($("#heart-rate-from").val());
+      var end = new Date($("#heart-rate-to").val());
+      end.setHours(23);
+      end.setMinutes(59);
+      end.setSeconds(59);
+      heartRateRange.start = start;
+      heartRateRange.end = end;
+      loadHeartRateData();
+
+      loadHeartRateRunner = setInterval(loadHeartRateData, dataReloadIntervals);
+    });
+
+    $("#load-temp").click(function() {
+      clearInterval(loadTempData);
+
+      var start = new Date($("#temp-from").val());
+      var end = new Date($("#temp-to").val());
+      end.setHours(23);
+      end.setMinutes(59);
+      end.setSeconds(59);
+      tempRange.start = start;
+      tempRange.end = end;
+      loadTempData();
+
+      loadHeartRateRunner = setInterval(loadTempData, dataReloadIntervals);
     });
 
     var today = new Date(new Date().getTime() + 1000*60*60*24);
     var before = new Date(today - 1000*60*60*24*1);
+
     $("#heart-rate-to").val(today.toISOString().slice(0,10))
     $("#temp-to").val(today.toISOString().slice(0,10))
     $("#heart-rate-from").val(before.toISOString().slice(0,10))
     $("#temp-from").val(before.toISOString().slice(0,10))
+
     $("#load-heart-rate").click()
     $("#load-temp").click()
   </script>
