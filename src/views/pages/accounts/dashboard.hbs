@@ -98,7 +98,7 @@
     };
 
     $("#load-heart-rate").click(function() {
-      clearInterval(loadHeartRateData);
+      clearInterval(loadHeartRateRunner);
 
       var start = new Date($("#heart-rate-from").val());
       var end = new Date($("#heart-rate-to").val());
@@ -113,7 +113,7 @@
     });
 
     $("#load-temp").click(function() {
-      clearInterval(loadTempData);
+      clearInterval(loadTempRunner);
 
       var start = new Date($("#temp-from").val());
       var end = new Date($("#temp-to").val());
@@ -124,7 +124,7 @@
       tempRange.end = end;
       loadTempData();
 
-      loadHeartRateRunner = setInterval(loadTempData, dataReloadIntervals);
+      loadTempRunner = setInterval(loadTempData, dataReloadIntervals);
     });
 
     var today = new Date(new Date().getTime() + 1000*60*60*24);
