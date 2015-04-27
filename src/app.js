@@ -4,7 +4,7 @@ var conFile= process.argv[3] || __dirname + "/../config.json";
 var config = require(conFile);
 var port   = process.argv[2] || config.port;
 app.keys   = [config.cookieKey];
-console.info("Running in: " + app.env)
+console.info("Running in: ".green.bold + app.env.blue.bold)
 
 // Modules
 require('colors');
