@@ -19,5 +19,5 @@ module.exports = function*(next) {
   var end = new Date();
   this.response.header['x-response-time'] = end - start;
 
-  console.info(this.request.connection.remoteAddress + ' - ' + this.request.method.bold + ' ' + this.request.url + ' => ' + niceStatus(this.response) + ' in ' + this.response.header['x-response-time'] + 'ms (' + (this.response.header['content-length'] || 0) + ' characters)');
+  console.info(this.req.connection.remoteAddress + ' - ' + this.request.method.bold + ' ' + this.request.url + ' => ' + niceStatus(this.response) + ' in ' + this.response.header['x-response-time'] + 'ms (' + (this.response.header['content-length'] || 0) + ' characters)');
 };
