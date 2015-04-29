@@ -71,7 +71,7 @@ Mailer.prototype.recoverEmail = function(user, hours) {
   this.getView('accounts/recover', function(template) {
     var message = template({
       email: user.email,
-      url: _this.url('resetPassword') + '?email=' + user.email + '&code=' + user.resetCode,
+      url: _this.url('resetPassword') + '?email=' + encodeURIComponent(user.email) + '&code=' + encodeURIComponent(user.resetCode),
       hours: hours
     });
 
