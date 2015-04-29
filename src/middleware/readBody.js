@@ -1,4 +1,5 @@
 var qs = require('querystring');
+require('colors');
 
 module.exports = function*(next) {
   var _this = this;
@@ -18,8 +19,11 @@ module.exports = function*(next) {
         if(_this.verifyCsrf(form.csrf)) {
           _this.form = form;
           resolve(true);
+        } else {
+          console.warn("Failed CSRF tag".yellow)
+          _this.form = {};
+          resolve(false);
         }
-        resolve(false);
       });
     }
   );

@@ -10,8 +10,8 @@
 
   "mailer": {
     "mailViews": "src/views/mail",
-    "from": "Nowall Automated Services <noreply@nowall.el-abid.com>",
-    "domain": "nowall.el-abid.com",
+    "from": "Nowall Automated Services <noreply@nowall.empty.rocks>",
+    "domain": "nowall.empty.rocks",
     "transport": {}
   },
 

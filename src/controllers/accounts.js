@@ -111,6 +111,13 @@ module.exports = function(app) {
 
   app.post('/accounts/forgot', readBody, function*(next) {
     var _this = this;
+
+    if(typeof this.form.email === "undefined") {
+      this.session.flash.warning = "Please provide an email address.";
+      this.response.redirect(app.url('forgotPassword'));
+      return;
+    }
+
     var user  = yield this.models.User.findByEmail(this.form.email);
 
     if(user && user.generateReset()) {
@@ -120,7 +127,7 @@ module.exports = function(app) {
             console.log(err);
             _this.session.flash.danger = "Database error";
           } else {
-            _this.mailer.recoverEmail(user, _this.request.ip, _this.models.User.hoursForReset);
+            _this.mailer.recoverEmail(user, _this.models.User.hoursForReset);
             _this.session.flash.info = "Email being sent!";
           }
           resolve();
@@ -137,7 +144,9 @@ module.exports = function(app) {
     });
   });
 
-  function getResetUser() {
+  var getResetUser = function*(next) {
+    var user;
+
     if(this.params.email && this.params.code) {
       var _this = this;
       user = yield (new Promise(function(resolve, reject) {
@@ -146,23 +155,64 @@ module.exports = function(app) {
           resetCode: _this.params.code
         }, function(err, result) {
           resolve(result);
-        })
+        });
       }));
     };
 
-    return user;
+    this.user = user;
   }
 
   app.get('resetPassword', '/accounts/reset', readParam, function*(next) {
-    var user = null;
-    getResetUser(this);
+    yield getResetUser;
 
-    if(user == null) {
+    if(this.user == null) {
       this.session.flash.danger = "Unable to find matching account, your token has probably expired."
+      this.response.redirect(app.url('forgotPassword'));
+      return;
     }
 
     yield this.render('accounts/reset', {
-      title: "Reset Password"
+      title: "Reset Password",
+      code: this.params.code,
+      email: this.params.email
+    });
+  });
+
+  app.post('/accounts/reset', readBody, function*(next) {
+    this.params = this.form;
+    yield getResetUser;
+
+    if(this.user == null) {
+      this.session.flash.danger = "Unable to find matching account, your token has probably expired."
+      this.response.redirect(app.url('forgotPassword'));
+      return;
+    }
+
+    if(this.form.password != this.form.password_confirmation) {
+      this.session.flash.warning = "Passwords did not match.";
+    } else {
+      this.user.password = this.form.password
+      this.user.resetCode = null;
+      var _this = this;
+      var prom = new Promise(function(resolve, reject) {
+        _this.user.save(function(err) {
+          if(err) {
+            _this.session.flash.danger = "There was an issue updating your account."
+            resolve(false)
+          } else {
+            _this.session.info = "Password reset";
+            _this.response.redirect(app.url('login'));
+            resolve(true)
+          }
+        })
+      });
+      if(yield prom) return;
+    }
+
+    yield this.render('accounts/reset', {
+      title: "Reset Password",
+      code: this.params.code,
+      email: this.params.email
     });
   });
 
