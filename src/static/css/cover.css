@@ -161,3 +161,14 @@ body {
     width: 700px;
   }
 }
+
+.mastfoot a {
+  color: rgba(255, 255, 255, 0.498039);
+  text-shadow: rgba(0, 0, 0, 0.498039) 0px 1px 3px;;
+  text-decoration: underline;
+}
+
+.mastfoot a:hover {
+  color: rgb(255, 255, 255);
+  text-shadow: rgba(0, 0, 0, 0.498039);
+}
