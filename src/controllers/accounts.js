@@ -200,7 +200,7 @@ module.exports = function(app) {
             _this.session.flash.danger = "There was an issue updating your account."
             resolve(false)
           } else {
-            _this.session.info = "Password reset";
+            _this.session.flash.info = "Password reset!";
             _this.response.redirect(app.url('login'));
             resolve(true)
           }
