@@ -41,7 +41,7 @@ var wwwRegex = /^www\.(.+?)$/
 app.use(function*(next) {
   var result = wwwRegex.exec(this.request.header.host);
   if(result != null) {
-    this.response.redirect(result[1]);
+    this.response.redirect("http://" + result[1]);
   } else {
     yield* next;
   }
