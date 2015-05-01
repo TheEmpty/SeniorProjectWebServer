@@ -36,17 +36,6 @@ require('./helpers/handlebars-helpers.js')(app, hbs);
 // Koa Cache should always come second.
 // Router should always come last.
 app.use(require('./middleware/verbal.js'));
-
-var wwwRegex = /^www\.(.+?)$/
-app.use(function*(next) {
-  var result = wwwRegex.exec(this.request.header.host);
-  if(result != null) {
-    this.response.redirect("http://" + result[1] + this.request.url);
-  } else {
-    yield* next;
-  }
-});
-
 app.use(koacache(config["koa-cache"].cacheSrc, config["koa-cache"].cacheOpt));
 app.use(mongo.middleware);
 app.use(session({ store: mCookie.create() }));
