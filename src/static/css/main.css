@@ -6,3 +6,7 @@ body {
 p.essay {
   text-indent: 50px;
 }
+
+.centered {
+  text-align: center;
+}
